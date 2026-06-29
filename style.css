@@ -160,7 +160,8 @@ a:hover {
 
 .spin-slow {
   animation: spin 28s linear infinite;
-  transform-origin: 100px 100px;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
 }
 
 @keyframes spin {

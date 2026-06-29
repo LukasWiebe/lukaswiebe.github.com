@@ -43,8 +43,10 @@
       <circle cx="100" cy="100" r="91"  fill="none" stroke="white" stroke-width="1.8"/>
       <circle cx="100" cy="100" r="87"  fill="none" stroke="white" stroke-width="0.5" opacity="0.35"/>
 
-      <!-- Rotating rotor group (all content centred at 0,0 in this group) -->
-      <g transform="translate(100,100)" class="spin-slow">
+      <!-- Static group: places rotor at SVG centre -->
+      <g transform="translate(100,100)">
+      <!-- Animated inner group: spins around its own centre (0,0 local = 100,100 SVG) -->
+      <g class="spin-slow">
 
         <!-- 20 cambered airfoil blades at 18° intervals -->
         <use href="#tb" fill="white" opacity="0.92"/>
@@ -85,7 +87,8 @@
         <!-- Centre hub cap -->
         <circle cx="0" cy="0" r="11" fill="white" opacity="0.55"/>
         <circle cx="0" cy="0" r="5.5" fill="none" stroke="white" stroke-width="1.8" opacity="0.95"/>
-      </g>
+      </g><!-- end spin-slow -->
+      </g><!-- end static translate -->
 
       <!-- Static shaft centre dot -->
       <circle cx="100" cy="100" r="3.5" fill="white" opacity="0.6"/>
