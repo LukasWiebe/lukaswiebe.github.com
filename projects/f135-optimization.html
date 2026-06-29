@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>F135 Turbofan Optimization — Lukas Wiebe</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="../index.html">Lukas Wiebe</a>
+      <ul class="nav-links">
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="section-inner">
+      <a class="back-link" href="../index.html#projects">All Projects</a>
+      <div class="context-tag">Propulsion · UBCO ENGR 477 · 2025–2026</div>
+      <h1>F135 Thrust &amp; Fuel Consumption<br>Optimization</h1>
+      <p class="header-sub">Aircraft Propulsion · University of British Columbia Okanagan</p>
+    </div>
+  </div>
+
+  <div class="detail-body">
+
+    <div class="detail-main">
+
+      <h2>Overview</h2>
+      <p>
+        This project modeled the thermodynamic cycle of the F135 — the low bypass turbofan engine
+        powering the F-35 Lightning II — to systematically optimize its performance parameters.
+        The analysis focused on identifying optimal combinations of bypass ratio and pressure ratio
+        that minimize specific fuel consumption (SFC) and thrust specific fuel consumption (TSFC)
+        while maintaining thrust output.
+      </p>
+      <p>
+        The work combined classical Brayton cycle analysis with iterative MATLAB computation, producing
+        a parametric study of engine performance across a realistic design space.
+      </p>
+
+      <h2>Methodology</h2>
+      <ul>
+        <li>Modeled the ideal thermodynamic cycle of a low bypass turbofan with inlet and efficiency conditions</li>
+        <li>Defined inlet conditions, component efficiencies, and fuel properties consistent with the F135 operating envelope</li>
+        <li>Implemented an iterative MATLAB solver to sweep bypass ratio and pressure ratio across a defined parameter space</li>
+        <li>Generated 3D surface plots mapping SFC and TSFC across the full parameter grid</li>
+        <li>Identified optimal operating points and analyzed trade-offs between thrust density and fuel efficiency</li>
+      </ul>
+
+      <h2>Results &amp; Insights</h2>
+      <p>
+        The 3D optimization graphs revealed clear performance ridges — combinations of bypass and pressure
+        ratio that simultaneously minimize fuel consumption and maximize thrust. The analysis confirmed
+        that the F135's relatively low bypass ratio is a deliberate trade-off favouring thrust density
+        and supersonic performance over cruise fuel efficiency, consistent with its combat aircraft mission profile.
+      </p>
+      <p>
+        The iterative approach allowed rapid evaluation of hundreds of design points that would be
+        infeasible to assess analytically, demonstrating the value of computational methods in
+        early-stage propulsion design.
+      </p>
+
+      <h2>Skills Applied</h2>
+      <ul>
+        <li>Thermodynamic cycle analysis (Brayton cycle, inlet recovery, polytropic efficiencies)</li>
+        <li>MATLAB scripting for iterative parametric studies and 3D visualization</li>
+        <li>Interpretation of turbofan performance maps and SFC/TSFC trade-offs</li>
+        <li>Engineering report writing and results presentation</li>
+      </ul>
+
+    </div>
+
+    <div class="detail-sidebar">
+
+      <div class="sidebar-card">
+        <h3>Tools &amp; Methods</h3>
+        <ul>
+          <li>MATLAB — cycle modelling, iteration &amp; 3D plotting</li>
+          <li>Brayton cycle thermodynamic analysis</li>
+          <li>Parametric sweep &amp; optimization</li>
+          <li>Technical report writing</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>Project Details</h3>
+        <ul>
+          <li><strong>Duration:</strong> 2025 – 2026</li>
+          <li><strong>Course:</strong> ENGR 477 — Aircraft Propulsion</li>
+          <li><strong>Institution:</strong> UBC Okanagan</li>
+          <li><strong>Engine modelled:</strong> F135 (F-35 Lightning II)</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>Outcomes</h3>
+        <span class="outcome-badge">Parametric Model Built</span>
+        <span class="outcome-badge">Optimal Design Points Identified</span>
+        <span class="outcome-badge">3D Performance Maps Generated</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2026 Lukas Wiebe · Mechanical Engineering Portfolio</p>
+  </footer>
+
+</body>
+</html>

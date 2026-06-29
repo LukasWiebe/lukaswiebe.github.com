@@ -3,9 +3,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello</title>
+  <title>Lukas Wiebe — Mechanical Engineering Portfolio</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Hello, this is Lukas</h1>
+
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="index.html">Lukas Wiebe</a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Lukas Wiebe</h1>
+    <p class="subtitle">Mechanical Engineering Graduate</p>
+    <p class="tagline">
+      Specializing in thermofluids, aerospace propulsion, and combustion systems.
+      UBC Okanagan BSc (2026) · Certified Engineering Technologist (SAIT, 2023)
+    </p>
+    <a href="#projects" class="btn btn-primary">View Projects</a>
+    <a href="#contact" class="btn btn-outline">Get in Touch</a>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="section-inner">
+      <h2 class="section-title">About</h2>
+      <div class="section-divider"></div>
+      <p class="about-text">
+        Mechanical Engineering graduate from UBC Okanagan (April 2026) and certified Mechanical Engineering
+        Technologist (SAIT, 2023), with a passion for thermodynamics, fluid dynamics, and a strong foundation
+        in design, analysis, and manufacturing. I aspire to work in the aerospace sector with a focus on
+        gas turbine design and thermofluids engineering. Outside of engineering I practice Brazilian Jiu-Jitsu
+        and Muay Thai, maintain classic vehicles, and keep reptiles — pursuits that reinforce the same
+        discipline and attention to detail I bring to technical work.
+      </p>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section section-alt">
+    <div class="section-inner">
+      <h2 class="section-title">Technical Skills</h2>
+      <div class="section-divider"></div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-label">CAD &amp; Modelling</div>
+          <div class="skill-items">SolidWorks, Autodesk Fusion 360</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-label">Analysis &amp; Code</div>
+          <div class="skill-items">MATLAB, OpenFOAM, CFD, Circuit Analysis</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-label">Mechanical Systems</div>
+          <div class="skill-items">Thermodynamics, Fluid Dynamics, Hydraulics, Pneumatics, Propulsion</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-label">Manufacturing</div>
+          <div class="skill-items">Manual Lathe &amp; Mill, Engineering Drawings, PLCs, Ladder Logic</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-label">Professional</div>
+          <div class="skill-items">Technical Writing, Team Leadership, Public Speaking, Schedule Management</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section class="section">
+    <div class="section-inner">
+      <h2 class="section-title">Education</h2>
+      <div class="section-divider"></div>
+      <div class="edu-list">
+        <div class="edu-item">
+          <div class="edu-dot"></div>
+          <div>
+            <div class="edu-year">Sep 2024 – Apr 2026</div>
+            <div class="edu-degree">Bachelor of Science — Mechanical Engineering</div>
+            <div class="edu-school">University of British Columbia Okanagan (UBCO)</div>
+            <div class="edu-notes">
+              4th year focus: aircraft propulsion, aerodynamic design, combustion science, materials science,
+              and numerical methods. Applied MATLAB and OpenFOAM for engineering analysis.
+              Capstone: combustion chamber for a turbocharger-based small gas turbine (UAV applications).
+            </div>
+          </div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-dot"></div>
+          <div>
+            <div class="edu-year">Sep 2023 – Apr 2024</div>
+            <div class="edu-degree">Mechanical Engineering Bridge — Advanced Diploma</div>
+            <div class="edu-school">Camosun College, Victoria BC</div>
+            <div class="edu-notes">
+              Advanced coursework in calculus, linear algebra, differential equations, and dynamics.
+              Qualified for direct entry into UBC's accredited Mechanical Engineering program.
+            </div>
+          </div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-dot"></div>
+          <div>
+            <div class="edu-year">2021 – 2023</div>
+            <div class="edu-degree">Mechanical Engineering Technology Diploma</div>
+            <div class="edu-school">Southern Alberta Institute of Technology (SAIT)</div>
+            <div class="edu-notes">
+              Specialization in Design &amp; Analysis. Certified Mechanical Engineering Technologist.
+              Hands-on training in hydraulics, pneumatics, SolidWorks, Fusion 360, PLCs, and machine shop.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section section-alt" id="projects">
+    <div class="section-inner">
+      <h2 class="section-title">Engineering Projects</h2>
+      <div class="section-divider"></div>
+      <div class="project-grid">
+
+        <div class="project-card">
+          <span class="project-tag">Capstone</span>
+          <h3>Combustion Chamber Design — Turbocharger Gas Turbine</h3>
+          <div class="project-year">2025 – 2026 · UBC Okanagan</div>
+          <p>
+            Designed a compact combustion chamber for a small-scale gas turbine built around a commercial
+            turbocharger, targeting UAV research and educational use. Conducted MATLAB dimensioning and
+            SolidWorks modelling, optimizing for fuel consumption, thrust, and thermal efficiency.
+          </p>
+          <a class="card-link" href="projects/combustion-chamber.html">View Project</a>
+        </div>
+
+        <div class="project-card">
+          <span class="project-tag">Propulsion</span>
+          <h3>F135 Thrust &amp; Fuel Consumption Optimization</h3>
+          <div class="project-year">2025 – 2026 · UBCO ENGR 477</div>
+          <p>
+            Modeled the ideal thermodynamic cycle of a low bypass turbofan engine using MATLAB.
+            Conducted analytical and iterative processes producing 3D optimization graphs for bypass
+            ratio and pressure ratio against specific fuel consumption and thrust.
+          </p>
+          <a class="card-link" href="projects/f135-optimization.html">View Project</a>
+        </div>
+
+        <div class="project-card">
+          <span class="project-tag">Materials</span>
+          <h3>Materials Selection &amp; Design — Turbine Blade</h3>
+          <div class="project-year">2025 · UBCO ENGR 475</div>
+          <p>
+            Evaluated and optimized material selection for a high temperature, high pressure turbine blade.
+            Applied multi-criteria analysis including thermal stress, creep resistance, cost, and
+            geometric constraints using established materials selection methodology.
+          </p>
+          <a class="card-link" href="projects/materials-selection.html">View Project</a>
+        </div>
+
+        <div class="project-card">
+          <span class="project-tag">Manufacturing</span>
+          <h3>Stirling Engine — From Raw Stock</h3>
+          <div class="project-year">2021 · SAIT MNFG 310</div>
+          <p>
+            Designed and machined a fully functional, balanced Stirling engine from raw materials using
+            manual lathes and mills. Applied manufacturing drawings to produce precision components
+            from stock material through to a working assembly.
+          </p>
+          <a class="card-link" href="projects/stirling-engine.html">View Project</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="section-inner">
+      <h2 class="section-title">Contact</h2>
+      <div class="section-divider"></div>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="contact-type">Email</div>
+          <div class="contact-value">
+            <a href="mailto:lukaswiebe@gmail.com">lukaswiebe@gmail.com</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-type">Phone</div>
+          <div class="contact-value">(587) 834-5853</div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-type">Location</div>
+          <div class="contact-value">Calgary, Alberta<br>Open to relocation</div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-type">GitHub</div>
+          <div class="contact-value">
+            <a href="https://github.com/LukasWiebe" target="_blank" rel="noopener">github.com/LukasWiebe</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Lukas Wiebe · Mechanical Engineering Portfolio</p>
+  </footer>
+
 </body>
 </html>
