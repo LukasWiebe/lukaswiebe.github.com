@@ -21,14 +21,88 @@
 
   <!-- HERO -->
   <section class="hero">
-    <h1>Lukas Wiebe</h1>
-    <p class="subtitle">Mechanical Engineering Graduate</p>
-    <p class="tagline">
-      Specializing in thermofluids, aerospace propulsion, and combustion systems.
-      UBC Okanagan BSc (2026) · Certified Engineering Technologist (SAIT, 2023)
-    </p>
-    <a href="#projects" class="btn btn-primary">View Projects</a>
-    <a href="#contact" class="btn btn-outline">Get in Touch</a>
+
+    <!-- Realistic jet turbine rotor (airfoil blades, disc, casing) -->
+    <svg class="hero-turbine" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <!--
+          One compressor airfoil blade, in local coords centred at (0,0).
+          Blade points up (toward negative-y). Leading edge on left (negative-x),
+          trailing edge on right (positive-x). Shape tapers from ~9 px chord at root
+          to ~5 px at tip. Camber line sweeps slightly from root to tip (realistic twist).
+        -->
+        <path id="tb"
+          d="M -4,-37
+             C -6.5,-52 -5,-68 -2.5,-80
+             C -1.5,-83 0.5,-84.5 2,-82
+             C 4.5,-79 6,-64 5.5,-39
+             Q 2.5,-34 -4,-37 Z"/>
+      </defs>
+
+      <!-- Static outer annular casing -->
+      <circle cx="100" cy="100" r="91"  fill="none" stroke="white" stroke-width="1.8"/>
+      <circle cx="100" cy="100" r="87"  fill="none" stroke="white" stroke-width="0.5" opacity="0.35"/>
+
+      <!-- Rotating rotor group (all content centred at 0,0 in this group) -->
+      <g transform="translate(100,100)" class="spin-slow">
+
+        <!-- 20 cambered airfoil blades at 18° intervals -->
+        <use href="#tb" fill="white" opacity="0.92"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(18)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(36)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(54)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(72)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(90)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(108)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(126)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(144)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(162)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(180)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(198)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(216)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(234)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(252)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(270)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(288)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(306)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(324)"/>
+        <use href="#tb" fill="white" opacity="0.92" transform="rotate(342)"/>
+
+        <!-- Rotor disc (concentric detail rings, like a real compressor disc) -->
+        <circle cx="0" cy="0" r="37"  fill="none" stroke="white" stroke-width="1.1" opacity="0.8"/>
+        <circle cx="0" cy="0" r="31"  fill="none" stroke="white" stroke-width="0.4" opacity="0.4"/>
+        <circle cx="0" cy="0" r="25"  fill="none" stroke="white" stroke-width="0.7" opacity="0.65"/>
+        <circle cx="0" cy="0" r="19"  fill="none" stroke="white" stroke-width="0.4" opacity="0.45"/>
+
+        <!-- Bolt circle — 6 fasteners at r=28 (structural disc feature) -->
+        <circle cx="0"    cy="-28" r="2.2" fill="none" stroke="white" stroke-width="0.9" opacity="0.7"/>
+        <circle cx="0"    cy="-28" r="2.2" fill="none" stroke="white" stroke-width="0.9" opacity="0.7" transform="rotate(60)"/>
+        <circle cx="0"    cy="-28" r="2.2" fill="none" stroke="white" stroke-width="0.9" opacity="0.7" transform="rotate(120)"/>
+        <circle cx="0"    cy="-28" r="2.2" fill="none" stroke="white" stroke-width="0.9" opacity="0.7" transform="rotate(180)"/>
+        <circle cx="0"    cy="-28" r="2.2" fill="none" stroke="white" stroke-width="0.9" opacity="0.7" transform="rotate(240)"/>
+        <circle cx="0"    cy="-28" r="2.2" fill="none" stroke="white" stroke-width="0.9" opacity="0.7" transform="rotate(300)"/>
+
+        <!-- Centre hub cap -->
+        <circle cx="0" cy="0" r="11" fill="white" opacity="0.55"/>
+        <circle cx="0" cy="0" r="5.5" fill="none" stroke="white" stroke-width="1.8" opacity="0.95"/>
+      </g>
+
+      <!-- Static shaft centre dot -->
+      <circle cx="100" cy="100" r="3.5" fill="white" opacity="0.6"/>
+    </svg>
+
+    <!-- Hero text (z-index above the turbine) -->
+    <div class="hero-content">
+      <h1>Lukas Wiebe</h1>
+      <p class="subtitle">Mechanical Engineering Graduate</p>
+      <p class="tagline">
+        Specializing in thermofluids, aerospace propulsion, and combustion systems.
+        UBC Okanagan BSc (2026) · Certified Engineering Technologist (SAIT, 2023)
+      </p>
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-outline">Get in Touch</a>
+    </div>
+
   </section>
 
   <!-- ABOUT -->
