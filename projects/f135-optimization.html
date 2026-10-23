@@ -36,9 +36,9 @@
       <p>
         This project modeled the thermodynamic cycle of the F135 — the low bypass turbofan engine
         powering the F-35 Lightning II — to systematically optimize its performance parameters.
-        The analysis focused on identifying optimal combinations of bypass ratio and pressure ratio
-        that minimize specific fuel consumption (SFC) and thrust specific fuel consumption (TSFC)
-        while maintaining thrust output.
+        The analysis examined how high compressor pressure ratio and turbine inlet temperature affect
+        thrust, specific thrust, and thrust specific fuel consumption (TSFC), and how bypass ratio
+        trades specific thrust against fuel efficiency.
       </p>
       <p>
         The work combined classical Brayton cycle analysis with iterative MATLAB computation, producing
@@ -49,23 +49,61 @@
       <ul>
         <li>Modeled the ideal thermodynamic cycle of a low bypass turbofan with inlet and efficiency conditions</li>
         <li>Defined inlet conditions, component efficiencies, and fuel properties consistent with the F135 operating envelope</li>
-        <li>Implemented an iterative MATLAB solver to sweep bypass ratio and pressure ratio across a defined parameter space</li>
-        <li>Generated 3D surface plots mapping SFC and TSFC across the full parameter grid</li>
+        <li>Implemented an iterative MATLAB solver to sweep high compressor pressure ratio (10–15) and turbine inlet temperature (1750–2250 K)</li>
+        <li>Generated 3D surface plots mapping thrust, specific thrust, and TSFC across that parameter grid</li>
+        <li>Ran a separate bypass ratio sweep (0–1.5) to plot specific thrust and TSFC against bypass ratio</li>
         <li>Identified optimal operating points and analyzed trade-offs between thrust density and fuel efficiency</li>
       </ul>
 
       <h2>Results &amp; Insights</h2>
       <p>
-        The 3D optimization graphs revealed clear performance ridges — combinations of bypass and pressure
-        ratio that simultaneously minimize fuel consumption and maximize thrust. The analysis confirmed
-        that the F135's relatively low bypass ratio is a deliberate trade-off favouring thrust density
-        and supersonic performance over cruise fuel efficiency, consistent with its combat aircraft mission profile.
+        The 3D surfaces show turbine inlet temperature as the dominant driver of performance: raising it
+        from 1750 K to 2250 K lifts thrust from roughly 97 kN to 128 kN, but TSFC rises with it, so extra
+        thrust comes at a fuel cost. The bypass ratio sweep showed the opposite trade-off — increasing
+        bypass ratio from 0 to 1.5 cut TSFC by more than half while specific thrust fell only slightly.
+        The analysis confirmed that the F135's relatively low bypass ratio is a deliberate trade-off favouring
+        thrust density and supersonic performance over cruise fuel efficiency, consistent with its combat
+        aircraft mission profile.
       </p>
       <p>
         The iterative approach allowed rapid evaluation of hundreds of design points that would be
         infeasible to assess analytically, demonstrating the value of computational methods in
         early-stage propulsion design.
       </p>
+
+      <h2>Performance Plots</h2>
+      <div class="media-grid">
+        <figure class="media-item media-wide">
+          <a href="media/f135-1-thrust-surface.jpg" target="_blank" rel="noopener">
+            <img src="media/f135-1-thrust-surface.jpg" alt="MATLAB 3D surface plot of thrust versus high compressor pressure ratio and turbine inlet temperature" loading="lazy">
+          </a>
+          <figcaption>Thrust vs compressor pressure ratio and turbine inlet temperature — thrust climbs from roughly 97 to 128 kN as turbine inlet temperature rises</figcaption>
+        </figure>
+        <figure class="media-item media-wide">
+          <a href="media/f135-2-specific-thrust-surface.jpg" target="_blank" rel="noopener">
+            <img src="media/f135-2-specific-thrust-surface.jpg" alt="MATLAB 3D surface plot of specific thrust versus high compressor pressure ratio and turbine inlet temperature" loading="lazy">
+          </a>
+          <figcaption>Specific thrust across the same design space — hotter turbine inlet temperatures deliver more thrust per unit of airflow</figcaption>
+        </figure>
+        <figure class="media-item media-wide">
+          <a href="media/f135-3-tsfc-surface.jpg" target="_blank" rel="noopener">
+            <img src="media/f135-3-tsfc-surface.jpg" alt="MATLAB 3D surface plot of thrust specific fuel consumption versus high compressor pressure ratio and turbine inlet temperature" loading="lazy">
+          </a>
+          <figcaption>TSFC across the same design space — the added thrust from higher turbine inlet temperature comes at the cost of higher fuel consumption</figcaption>
+        </figure>
+        <figure class="media-item media-wide">
+          <a href="media/f135-4-specific-thrust-bypass.jpg" target="_blank" rel="noopener">
+            <img src="media/f135-4-specific-thrust-bypass.jpg" alt="MATLAB line plot of specific thrust decreasing as bypass ratio increases from 0 to 1.5" loading="lazy">
+          </a>
+          <figcaption>Specific thrust vs bypass ratio — specific thrust falls steadily as bypass ratio increases from 0 to 1.5</figcaption>
+        </figure>
+        <figure class="media-item media-wide">
+          <a href="media/f135-5-tsfc-bypass.jpg" target="_blank" rel="noopener">
+            <img src="media/f135-5-tsfc-bypass.jpg" alt="MATLAB line plot of thrust specific fuel consumption decreasing as bypass ratio increases from 0 to 1.5" loading="lazy">
+          </a>
+          <figcaption>TSFC vs bypass ratio — fuel consumption drops by more than half across the same range, the core thrust-versus-efficiency trade-off</figcaption>
+        </figure>
+      </div>
 
       <h2>Skills Applied</h2>
       <ul>
