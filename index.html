@@ -395,8 +395,8 @@
       return 23;
     }
     function liner(x) {
-      if (x < 64) return 10;
-      if (x < 92) return 10 + 28 * Math.sin((Math.PI / 2) * (x - 64) / 28);
+      if (x < 66) return ramp(x, 30, 66, 12, 18);   // upstream: dividing line between core and annulus air
+      if (x < 92) return 18 + 20 * Math.sin((Math.PI / 2) * (x - 66) / 26);   // dome from the swirler outer corners
       if (x < 262) return 38;
       if (x < 325) return ramp(x, 262, 325, 38, 23);
       return 23;
@@ -437,7 +437,7 @@
       return d;
     }
     root.querySelector('#cc-casing').setAttribute('d', wallPath(casing, 0, 400, []));
-    root.querySelector('#cc-liner').setAttribute('d', wallPath(liner, 64, 325, HOLES));
+    root.querySelector('#cc-liner').setAttribute('d', wallPath(liner, 66, 325, HOLES));
 
     const holeGroup = root.querySelector('#cc-holes');
     const NS = 'http://www.w3.org/2000/svg';
@@ -486,7 +486,7 @@
     function step(p, dt) {
       if (p.type === 'core') {
         p.x += coreSpeed(p.x) * U * dt;
-        let r = p.x < 64 ? p.s * 9 : p.s * 0.9 * liner(p.x);
+        let r = p.s * 0.9 * liner(p.x);
         let x = p.x;
         if (p.loop && p.x > 66) {
           p.th = TAU * clamp((p.x - 66) / p.span, 0, 1);
@@ -498,7 +498,7 @@
         p.dx = x; p.dy = CY + p.side * r;
       } else if (p.jet < 0) {
         p.x += annulusSpeed(p.x) * U * dt;
-        const inner = p.x < 64 ? 10 : liner(p.x) + 1.5;
+        const inner = liner(p.x) + 1.5;
         const r = inner + p.s * (casing(p.x) - 1.5 - inner);
         if (p.x >= p.hole.x - p.hole.w / 2 + 1) {
           p.jet = 0; p.x0 = p.x; p.r0 = r;
