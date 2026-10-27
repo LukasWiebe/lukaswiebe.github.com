@@ -5,6 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lukas Wiebe — Mechanical Engineering Portfolio</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Combustor styles (kept inline alongside its markup and script) -->
+  <style>
+    /* ─── COMBUSTOR ─── */
+    /* Continues the hero's background and grid below it. Script pulls it up into the hero's
+       empty bottom space (stopping short of the turbine) and aligns the grid. */
+    .combustor-band {
+      position: relative;
+      z-index: 2;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(rgba(247,129,102,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247,129,102,0.045) 1px, transparent 1px);
+      background-size: 40px 40px;
+      padding: 24px 0 56px;
+      overflow: hidden;
+    }
+
+    .hero-combustor {
+      position: relative;
+      /* Full page width (margin percentages also resolve against the band's width) */
+      --cc-w: 100%;
+      /* Casing sits 40/400 of the width inside the box top and bottom; trim that empty space */
+      margin: calc(var(--cc-w) * -0.1) auto;
+      opacity: 0.16;
+      width: var(--cc-w);
+      aspect-ratio: 400 / 184;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-combustor svg,
+    .hero-combustor canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Stroke widths are screen pixels, so lines stay crisp and thin at full page width */
+    .hero-combustor svg * {
+      vector-effect: non-scaling-stroke;
+    }
+
+    @media (max-width: 720px) {
+      .combustor-band { display: none; }
+    }
+  </style>
 </head>
 <body>
 
@@ -107,6 +154,34 @@
     </div>
 
   </section>
+
+  <!-- Combustion chamber band: sits below the hero so the turbine layout is unchanged -->
+  <div class="combustor-band">
+    <!-- Combustion chamber cross-section (walls drawn by script, particles on canvas) -->
+    <div class="hero-combustor" aria-hidden="true">
+      <svg viewBox="0 0 400 184" xmlns="http://www.w3.org/2000/svg">
+        <!-- Casing and flame tube walls (paths generated from the same profile the particles follow) -->
+        <path id="cc-casing" fill="none" stroke="white" stroke-width="2.4"/>
+        <path id="cc-liner"  fill="none" stroke="white" stroke-width="1.6"/>
+        <!-- Face-on air holes on the flame tube surface -->
+        <g id="cc-holes" fill="none" stroke="white" stroke-width="1" opacity="0.6"></g>
+
+        <!-- Fuel injector: feed pipe from the casing wall, bending onto the axis -->
+        <path d="M 26,69 V 87 Q 26,95 34,95 H 60" fill="none" stroke="white" stroke-width="1.4"/>
+        <path d="M 30,69 V 87 Q 30,89 34,89 H 60" fill="none" stroke="white" stroke-width="1.4"/>
+        <path d="M 60,88 L 64.5,90 V 94 L 60,96 Z" fill="white" opacity="0.85"/>
+
+        <!-- Swirl vanes either side of the injector -->
+        <g fill="none" stroke="white" stroke-width="1.4">
+          <rect x="60" y="74" width="6" height="7"/>
+          <path d="M 60,74 L 66,81 M 66,74 L 60,81"/>
+          <rect x="60" y="103" width="6" height="7"/>
+          <path d="M 60,103 L 66,110 M 66,103 L 60,110"/>
+        </g>
+      </svg>
+      <canvas></canvas>
+    </div>
+  </div>
 
   <!-- ABOUT -->
   <section class="section" id="about">
@@ -293,6 +368,284 @@
   <footer>
     <p>© 2026 Lukas Wiebe · Mechanical Engineering Portfolio</p>
   </footer>
+
+  <!-- Combustor flow animation -->
+  <script>
+  (function () {
+    const root = document.querySelector('.hero-combustor');
+    if (!root) return;
+
+    const CY = 92;          // centreline (viewBox units)
+    const U = 34;           // inlet velocity, viewBox units per second
+    const VB_W = 400, VB_H = 184;
+    const TAU = Math.PI * 2;
+    const HIST = 10;        // trail length in frames
+
+    const clamp = (t, a, b) => Math.min(b, Math.max(a, t));
+    const smooth = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
+    const ramp = (x, x0, x1, a, b) => a + (b - a) * smooth((x - x0) / (x1 - x0));
+    const rand = (a, b) => a + Math.random() * (b - a);
+
+    // Half-heights of the outer casing and the flame tube along the axis
+    function casing(x) {
+      if (x < 40) return 23;
+      if (x < 72) return ramp(x, 40, 72, 23, 52);
+      if (x < 290) return 52;
+      if (x < 325) return ramp(x, 290, 325, 52, 23);
+      return 23;
+    }
+    function liner(x) {
+      if (x < 64) return 10;
+      if (x < 92) return 10 + 28 * Math.sin((Math.PI / 2) * (x - 64) / 28);
+      if (x < 262) return 38;
+      if (x < 325) return ramp(x, 262, 325, 38, 23);
+      return 23;
+    }
+
+    // Primary, secondary and dilution holes: where annulus air jets into the flame tube
+    const HOLES = [
+      { x: 100, w: 5,  share: 0.15, depth: [0.10, 0.50] },
+      { x: 140, w: 5,  share: 0.15, depth: [0.20, 0.75] },
+      { x: 170, w: 5,  share: 0.15, depth: [0.20, 0.75] },
+      { x: 200, w: 5,  share: 0.15, depth: [0.20, 0.75] },
+      { x: 240, w: 10, share: 0.40, depth: [0.30, 0.85] }
+    ];
+
+    // Core gas is slow in the recirculation zone, then accelerates through the flame
+    // as it heats and expands, again with dilution air, and finally in the exit nozzle
+    function coreSpeed(x) {
+      if (x < 72) return ramp(x, 60, 72, 1, 0.55);
+      if (x < 110) return 0.55;
+      if (x < 165) return ramp(x, 110, 165, 0.55, 2.4);
+      if (x < 262) return ramp(x, 165, 262, 2.4, 2.8);
+      return ramp(x, 262, 330, 2.8, 4.4);
+    }
+    const annulusSpeed = x => ramp(x, 40, 75, 1, 0.75);
+
+    // ── Static geometry ──
+    function wallPath(fn, x0, x1, gaps) {
+      let d = '';
+      for (const side of [-1, 1]) {
+        let pen = false;
+        for (let x = x0; x <= x1; x += 0.25) {
+          const inGap = gaps.some(g => Math.abs(x - g.x) < g.w / 2);
+          if (inGap) { pen = false; continue; }
+          d += (pen ? 'L' : 'M') + x.toFixed(2) + ',' + (CY + side * fn(x)).toFixed(2) + ' ';
+          pen = true;
+        }
+      }
+      return d;
+    }
+    root.querySelector('#cc-casing').setAttribute('d', wallPath(casing, 0, 400, []));
+    root.querySelector('#cc-liner').setAttribute('d', wallPath(liner, 64, 325, HOLES));
+
+    const holeGroup = root.querySelector('#cc-holes');
+    const NS = 'http://www.w3.org/2000/svg';
+    for (const h of HOLES) {
+      const slot = h.w > 5;
+      const rows = slot ? [-18, 0, 18] : [-28, -14, 0, 14, 28];
+      for (const dy of rows) {
+        const e = document.createElementNS(NS, 'ellipse');
+        e.setAttribute('cx', h.x);
+        e.setAttribute('cy', CY + dy);
+        e.setAttribute('rx', slot ? 7 : 1.6);
+        e.setAttribute('ry', slot ? 1.8 : 2.6);
+        holeGroup.appendChild(e);
+      }
+    }
+
+    // ── Fluid particles ──
+    function pickHole() {
+      let r = Math.random();
+      for (const h of HOLES) { if ((r -= h.share) <= 0) return h; }
+      return HOLES[HOLES.length - 1];
+    }
+
+    function spawn(p, x) {
+      p.x = x;
+      p.side = Math.random() < 0.5 ? -1 : 1;
+      p.hist = [];
+      if (Math.random() < 0.3) {
+        // Core air: through the swirler, round the recirculation vortex, out through the flame
+        p.type = 'core';
+        p.s = rand(0.05, 0.9);
+        p.R = rand(7, 11);
+        p.span = rand(32, 42);
+        p.th = 0;
+        p.loop = true;
+      } else {
+        // Annulus air: around the flame tube, then in through one of the holes
+        p.type = 'ann';
+        p.s = rand(0.15, 0.85);
+        p.hole = pickHole();
+        p.jet = -1;
+      }
+      return p;
+    }
+
+    function step(p, dt) {
+      if (p.type === 'core') {
+        p.x += coreSpeed(p.x) * U * dt;
+        let r = p.x < 64 ? p.s * 9 : p.s * 0.9 * liner(p.x);
+        let x = p.x;
+        if (p.loop && p.x > 66) {
+          p.th = TAU * clamp((p.x - 66) / p.span, 0, 1);
+          if (p.th >= TAU) p.loop = false;
+          x += p.R * Math.sin(p.th);
+          r += p.R * (1 - Math.cos(p.th));
+          r = Math.min(r, liner(x) - 2.5);
+        }
+        p.dx = x; p.dy = CY + p.side * r;
+      } else if (p.jet < 0) {
+        p.x += annulusSpeed(p.x) * U * dt;
+        const inner = p.x < 64 ? 10 : liner(p.x) + 1.5;
+        const r = inner + p.s * (casing(p.x) - 1.5 - inner);
+        if (p.x >= p.hole.x - p.hole.w / 2 + 1) {
+          p.jet = 0; p.x0 = p.x; p.r0 = r;
+          p.rt = rand(p.hole.depth[0], p.hole.depth[1]) * liner(p.hole.x);
+        }
+        p.dx = p.x; p.dy = CY + p.side * r;
+      } else {
+        // Jet: plunges radially through the hole, bending downstream
+        p.jet = Math.min(1, p.jet + dt * U * 1.7 / 16);
+        const t = p.jet;
+        p.x = p.x0 + 16 * t * t;
+        const r = p.r0 + (p.rt - p.r0) * (1 - (1 - t) * (1 - t));
+        if (t >= 1) {
+          p.type = 'core';
+          p.loop = false;
+          p.s = r / (0.9 * liner(p.x));
+        }
+        p.dx = p.x; p.dy = CY + p.side * r;
+      }
+      if (p.dx > VB_W + 10) spawn(p, rand(-30, 0));
+    }
+
+    const particles = [];
+    for (let i = 0; i < 450; i++) particles.push(spawn({}, rand(-420, 0)));
+    for (let t = 0; t < 14; t += 1 / 30) particles.forEach(p => step(p, 1 / 30));
+    particles.forEach(p => { p.hist = []; });
+
+    // ── Flame: soft white puffs leaving the injector and stretching downstream ──
+    const flame = [];
+    let flameAcc = 0;
+    function stepFlame(dt) {
+      flameAcc += dt * 90;
+      while (flameAcc > 1) {
+        flameAcc -= 1;
+        flame.push({
+          x: rand(64, 67), r: rand(0, 3), side: Math.random() < 0.5 ? -1 : 1,
+          vr: rand(4, 20), life: 0, max: rand(0.9, 1.6), size: rand(2.5, 4.5)
+        });
+      }
+      for (let i = flame.length - 1; i >= 0; i--) {
+        const f = flame[i];
+        f.life += dt;
+        if (f.life > f.max) { flame.splice(i, 1); continue; }
+        f.x += coreSpeed(f.x) * U * dt * 1.1;
+        f.r = Math.min(f.r + f.vr * dt, liner(f.x) - 6);
+      }
+    }
+
+    // ── Rendering ──
+    const canvas = root.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    let k = 1;
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = root.clientWidth;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(w * dpr * VB_H / VB_W);
+      k = canvas.width / VB_W;
+    }
+    new ResizeObserver(resize).observe(root);
+    resize();
+
+    // Pull the band up into the hero's empty bottom space, leaving 16px under the turbine's
+    // outer ring and the buttons, then line its grid up with the hero grid it overlaps
+    const hero = document.querySelector('.hero');
+    const heroContent = hero.querySelector('.hero-content');
+    const turbine = hero.querySelector('.hero-turbine');
+    const band = root.parentElement;
+    function placeBand() {
+      const h = hero.getBoundingClientRect();
+      let lowest = heroContent.getBoundingClientRect().bottom;
+      const t = turbine && turbine.getBoundingClientRect();
+      if (t && t.width > 0) lowest = Math.max(lowest, t.top + t.height * (100 + 91) / 200);
+      const pull = Math.max(0, Math.floor(h.bottom - lowest - 16));
+      band.style.marginTop = -pull + 'px';
+      band.style.backgroundPosition = '0 ' + ((h.height - pull) % 40) + 'px';
+    }
+    new ResizeObserver(placeBand).observe(hero);
+    if (document.fonts) document.fonts.ready.then(placeBand);
+
+    function draw() {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.setTransform(k, 0, 0, k, 0, 0);
+
+      ctx.globalCompositeOperation = 'lighter';
+      for (const f of flame) {
+        const a = 0.085 * Math.sin(Math.PI * f.life / f.max);
+        const rad = f.size * (1 + f.life * 2.5);
+        const y = CY + f.side * f.r;
+        const g = ctx.createRadialGradient(f.x, y, 0, f.x, y, rad);
+        g.addColorStop(0, 'rgba(255,255,255,' + a.toFixed(3) + ')');
+        g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(f.x, y, rad, 0, TAU);
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+
+      // Streaks: each trail spans the last few frames, so faster gas draws longer lines.
+      // Segments are batched by age (newest brightest) so one stroke covers every particle.
+      ctx.lineCap = 'round';
+      ctx.lineWidth = 1.5 * (window.devicePixelRatio || 1) / k;   // 1.5 CSS px at any size
+      for (let age = 1; age < HIST; age++) {
+        ctx.strokeStyle = 'rgba(255,255,255,' + (0.9 * (1 - (age - 1) / (HIST - 1))).toFixed(3) + ')';
+        ctx.beginPath();
+        for (const p of particles) {
+          const h = p.hist, n = h.length;
+          if (p.dx < 0 || n <= age) continue;
+          ctx.moveTo(h[n - 1 - age][0], h[n - 1 - age][1]);
+          ctx.lineTo(h[n - age][0], h[n - age][1]);
+        }
+        ctx.stroke();
+      }
+    }
+
+    function tick(dt) {
+      for (const p of particles) {
+        const before = p.dx;
+        step(p, dt);
+        if (p.dx < before - 50) p.hist = [];   // respawned at the inlet
+        p.hist.push([p.dx, p.dy]);
+        if (p.hist.length > HIST) p.hist.shift();
+      }
+      stepFlame(dt);
+      draw();
+    }
+
+    // Warm up the flame and trails so the first painted frame is already flowing
+    for (let i = 0; i < 45; i++) tick(1 / 60);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let visible = true, last = null;
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; last = null; }).observe(root);
+    function frame(now) {
+      if (visible) {
+        const dt = last === null ? 1 / 60 : Math.min((now - last) / 1000, 1 / 30);
+        last = now;
+        tick(dt);
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  })();
+  </script>
 
 </body>
 </html>
